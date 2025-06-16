@@ -1,4 +1,2 @@
 # anony-post
 
-
-hello
