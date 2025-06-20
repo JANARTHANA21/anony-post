@@ -29,7 +29,7 @@ These are your essential launch features:
 	3.	Post Sharing
 	    •	Copy link to post
 	    •	Social share options (optional)
-		
+#
 	4.	Realtime Updates
 	•	Use Socket.IO for real-time feed updates (new posts, likes, etc.)
 	5.	Post Moderation
