@@ -32,6 +32,10 @@ const Login = () => {
       <Link to={userauth?"posts":null}>
       <button  className="w-full bg-indigo-600 text-white py-3 rounded mt-4">Login</button>
       </Link>
+      <br />
+      <Link to={'register'}>
+      <button >not have an account ?</button>
+      </Link>
     </form>
   )
 }
