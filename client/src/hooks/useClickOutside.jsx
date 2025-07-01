@@ -11,8 +11,8 @@ export default function useClickOutside(boxref,handler){
         document.addEventListener('mousedown',listern)
         document.addEventListener('touchstart',listern)
         return ()=>{
-        document.addEventListener('mousedown',listern)
-        document.addEventListener('touchstart',listern)
+        document.removeEventListener('mousedown',listern)
+        document.removeEventListener('touchstart',listern)
 
         }
     },[boxref,handler])

@@ -7,8 +7,13 @@ const postSchema = new mongoose.Schema(
     likes: { type: Number, default: 0 },
     commentsCount: { type: Number, default: 0 },
     sharesCount: { type: Number, default: 0 },
+    likedBy: {
+  type: [String],
+  default: [],
+  
+},
   },
   { timestamps: true }
 );
 
-export default mongoose.model("Posts", postSchema);
+export default mongoose.model("Post", postSchema);

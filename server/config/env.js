@@ -7,4 +7,5 @@ export const config = {
   JWT_SECRET__REFRESH_TOKEN: process.env.JWT_SECRET__REFRESH_TOKEN,
   JWT_SECRET_ACCESS_TOKEN_DURATION:process.env.access_duration,
   JWT_SECRET__REFRESH_TOKEN_DURATION:process.env.refresh_duration
+  
 };

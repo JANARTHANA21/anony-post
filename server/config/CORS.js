@@ -1,4 +1,19 @@
 import cors from "cors";
-export default function CORS(){
-    return cors({ origin: "http://localhost:5173", credentials: true })
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "https://your-production-url.com"
+];
+
+export default function CORS() {
+  return cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS Policy"));
+      }
+    },
+    credentials: true,
+  });
 }

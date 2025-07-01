@@ -1,117 +1,188 @@
 import React, { useState } from "react";
 import InputField from "../components/InputField";
-import  axios from 'axios';
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import API from "../api/axios";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const API_URL = import.meta.env.VITE_API_URL;
-  
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [showPassword, setShowPassword] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  const validateEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
   const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+
+    if (name === "username" && value.length < 3) {
+      setErrors((prev) => ({
+        ...prev,
+        username: "Username must be at least 3 characters",
+      }));
+    }
+
+    if (name === "email" && !validateEmail(value)) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Invalid email address",
+      }));
+    }
+
+    if (name === "confirmPassword" && value !== formData.password) {
+      setErrors((prev) => ({
+        ...prev,
+        confirmPassword: "Passwords do not match",
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.username.trim()) {
+      newErrors.username = "Username is required";
+    } else if (formData.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!validateEmail(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    }
+
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      return setError("Passwords do not match");
+    if (!validateForm()) {
+      toast.error("Please fix the errors below.");
+      return;
     }
 
+    setLoading(true);
     try {
-      setError("");
-      setSuccess("");
-      const res= await axios.post(`${API_URL}/api/auth/register`,{username:formData.username,email:formData.email,password:formData.password});
+      const res = await API.post(`${API_URL}/api/auth/register`, {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
 
-      if (res.status===201){
-        setSuccess("Registered successfully!");
+      if (res.status === 201) {
+        toast.success("Account created successfully!");
+        navigate("/");
       }
     } catch (err) {
-      setError("Something w`ent wrong.");
+      const msg =
+        err?.response?.data?.message || "Registration failed. Try again.";
+      toast.error(msg);
+      setErrors((prev) => ({ ...prev, general: msg }));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-200 to-indigo-300 p-6">
-      <form
-        onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white p-8 rounded shadow-xl"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Register
-        </h2>
-
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
-
-        <div className="mb-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md bg-white p-6 rounded shadow">
+        <h2 className="text-xl font-semibold text-center mb-4">Register</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <InputField
-            label="username"
+            label="Username"
+            name="username"
             type="text"
             value={formData.username}
             onChange={handleChange}
-            name="username"
+            error={errors.username}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-        </div>
 
-        <div className="mb-4">
           <InputField
             label="Email"
+            name="email"
             type="email"
             value={formData.email}
             onChange={handleChange}
-            name="email"
+            error={errors.email}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            autoComplete="email"
           />
-        </div>
 
-        <div className="mb-4">
           <InputField
             label="Password"
-            type={showPassword ? "text" : "password"}
+            name="password"
+            type="password"
             value={formData.password}
             onChange={handleChange}
-            name="password"
-            required
             showToggle
-            toggleHandler={() => setShowPassword(!showPassword)}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            isPasswordVisible={showPassword}
+            toggleHandler={() => setShowPassword((prev) => !prev)}
+            error={errors.password}
+            required
+            autoComplete="new-password"
           />
-        </div>
 
-        <div className="mb-6">
-            <InputField
+          <InputField
             label="Confirm Password"
-            type={showPassword ? "text" : "password"}
+            name="confirmPassword"
+            type="password"
             value={formData.confirmPassword}
             onChange={handleChange}
-            name="confirmPassword"
+            showToggle
+            isPasswordVisible={showConfirmPassword}
+            toggleHandler={() => setShowConfirmPassword((prev) => !prev)}
+            error={errors.confirmPassword}
             required
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-        </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-        >
-          Register
-        </button>
-      </form>
+          {errors.general && (
+            <p className="text-red-500 text-sm text-center">{errors.general}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
+          >
+            {loading ? "Registering..." : "Create Account"}
+          </button>
+        </form>
+
+        <p className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <Link to="/" className="text-indigo-600 hover:underline">
+            Login
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };

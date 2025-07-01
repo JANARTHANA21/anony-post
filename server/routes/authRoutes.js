@@ -1,10 +1,11 @@
-import e from "express";
-import {register,login} from '../controllers/authController.js';
+import express from "express";
+import { register, login } from "../controllers/authController.js";
 import refresh_token from "../controllers/refreshToken.js";
 
-const authRouter =e.Router();
+const authRouter = express.Router();
 
-authRouter.route('/register').post(register)
-authRouter.route('/login').post(login)
-authRouter.post('/refresh',refresh_token)
+authRouter.post("/register", register);
+authRouter.post("/login", login);
+authRouter.post("/refresh", refresh_token);
+
 export default authRouter;
