@@ -7,7 +7,7 @@ import API from "../API/axios.js";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
-
+  const dummy=1
   const [formData, setFormData] = useState({
     username: "",
     email: "",
