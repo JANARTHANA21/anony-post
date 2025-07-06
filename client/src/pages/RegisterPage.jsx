@@ -6,6 +6,7 @@ import API from "../api/axios";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -14,19 +15,16 @@ const RegisterPage = () => {
     confirmPassword: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
-  const API_URL = import.meta.env.VITE_API_URL;
 
   const validateEmail = (email) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
 
@@ -54,7 +52,7 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.username.trim()) {
+    if (!formData.username.trim()) {``
       newErrors.username = "Username is required";
     } else if (formData.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters";
@@ -82,7 +80,6 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validateForm()) {
       toast.error("Please fix the errors below.");
       return;
@@ -111,80 +108,102 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="w-full max-w-md bg-white p-6 rounded shadow">
-        <h2 className="text-xl font-semibold text-center mb-4">Register</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <InputField
-            label="Username"
-            name="username"
-            type="text"
-            value={formData.username}
-            onChange={handleChange}
-            error={errors.username}
-            required
-          />
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 via-teal-100 to-emerald-200 px-4">
+    <div className="w-full max-w-md bg-white/60 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-white/30 animate-fadeIn">
+      <h2 className="text-3xl font-bold text-center text-emerald-700 mb-2 tracking-tight">
+        Create Account
+      </h2>
+      <p className="text-sm text-center text-gray-700 mb-6">
+        Join us and explore the network
+      </p>
 
-          <InputField
-            label="Email"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            error={errors.email}
-            required
-            autoComplete="email"
-          />
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <InputField
+          label="Username"
+          name="username"
+          type="text"
+          value={formData.username}
+          onChange={handleChange}
+          error={errors.username}
+          required
+        />
 
-          <InputField
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-            showToggle
-            isPasswordVisible={showPassword}
-            toggleHandler={() => setShowPassword((prev) => !prev)}
-            error={errors.password}
-            required
-            autoComplete="new-password"
-          />
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={errors.email}
+          required
+          autoComplete="email"
+        />
 
-          <InputField
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            showToggle
-            isPasswordVisible={showConfirmPassword}
-            toggleHandler={() => setShowConfirmPassword((prev) => !prev)}
-            error={errors.confirmPassword}
-            required
-          />
+        <InputField
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          showToggle
+          isPasswordVisible={showPassword}
+          toggleHandler={() => setShowPassword((prev) => !prev)}
+          error={errors.password}
+          required
+          autoComplete="new-password"
+        />
 
-          {errors.general && (
-            <p className="text-red-500 text-sm text-center">{errors.general}</p>
-          )}
+        <InputField
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          showToggle
+          isPasswordVisible={showConfirmPassword}
+          toggleHandler={() => setShowConfirmPassword((prev) => !prev)}
+          error={errors.confirmPassword}
+          required
+        />
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700 transition"
-          >
-            {loading ? "Registering..." : "Create Account"}
-          </button>
-        </form>
+        {errors.general && (
+          <p className="text-red-500 text-sm text-center">{errors.general}</p>
+        )}
 
-        <p className="mt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link to="/" className="text-indigo-600 hover:underline">
-            Login
-          </Link>
-        </p>
-      </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-md hover:shadow-xl"
+        >
+          {loading ? 'Registering...' : 'Create Account'}
+        </button>
+      </form>
+
+      <p className="mt-4 text-center text-sm text-gray-700">
+        Already have an account?{' '}
+        <Link to="/" className="text-emerald-600 font-medium hover:underline">
+          Login
+        </Link>
+      </p>
     </div>
-  );
+
+    <style>{`
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.6s ease-out;
+      }
+    `}</style>
+  </div>
+);
 };
 
 export default RegisterPage;

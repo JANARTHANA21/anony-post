@@ -96,106 +96,110 @@ export default function Eachpost() {
   
   const renderComments = (commentsList) =>
     commentsList.map((comment) => (
-      <div key={comment._id} className="ml-4 mt-2 border-l pl-4">
-        {editingCommentId === comment._id ? (
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (editContent.trim()) {
-                editMutation.mutate({ id: comment._id, content: editContent });
-              }
-            }}
+  <div key={comment._id} className="ml-4 mt-4 pl-4 border-l-2 border-indigo-500/40">
+  <div className="bg-white/10 p-3 rounded-lg shadow-sm text-sm text-white">
+    {editingCommentId === comment._id ? (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (editContent.trim()) {
+            editMutation.mutate({ id: comment._id, content: editContent });
+          }
+        }}
+      >
+        <input
+          type="text"
+          value={editContent}
+          onChange={(e) => setEditContent(e.target.value)}
+          className="w-full p-2 rounded bg-white/20 text-white placeholder-gray-200"
+        />
+        <div className="mt-2 flex gap-2 text-xs">
+          <button type="submit" className="text-green-300 hover:underline">
+            💾 Save
+          </button>
+          <button
+            onClick={() => setEditingCommentId(null)}
+            type="button"
+            className="text-gray-300 hover:underline"
           >
-            <input
-              type="text"
-              value={editContent}
-              onChange={(e) => setEditContent(e.target.value)}
-              className="border p-1 rounded w-full mb-1"
-            />
-            <div className="space-x-2 text-sm">
-              <button type="submit" className="text-blue-600">
-                Save
-              </button>
-              <button
-                onClick={() => setEditingCommentId(null)}
-                type="button"
-                className="text-gray-600"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        ) : (
-          <>
-            <p>{comment.content}</p>
-            <div className="text-sm space-x-3 text-gray-700 mt-1">
-              <button onClick={() => likeCommentMutation.mutate(comment._id)} >
-                ❤️ {comment.likes}{" "}
-              </button>
-              <button onClick={() => handleReply(comment._id)}>Reply</button>
-              <button onClick={() => handleEdit(comment)}>Edit</button>
-              <button onClick={() => handleDelete(comment._id)}>Delete</button>
-            </div>
-          </>
-        )}
-        {replyTo === comment._id && (
-          <form
-            className="mt-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (newComment.trim()) {
-                commentMutation.mutate({
-                  content: newComment,
-                  parentId: comment._id,
-                });
-              }
-            }}
+            ❌ Cancel
+          </button>
+        </div>
+      </form>
+    ) : (
+      <>
+        <p className="text-white">{comment.content}</p>
+        <div className="flex gap-4 text-xs text-gray-300 mt-1">
+          <button onClick={() => likeCommentMutation.mutate(comment._id)}>
+            ❤️ {comment.likes}
+          </button>
+          <button onClick={() => handleReply(comment._id)}>↩️ Reply</button>
+          <button onClick={() => handleEdit(comment)}>✏️ Edit</button>
+          <button onClick={() => handleDelete(comment._id)}>🗑️ Delete</button>
+        </div>
+      </>
+    )}
+
+    {/* Reply input box */}
+    {replyTo === comment._id && (
+      <form
+        className="mt-2"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (newComment.trim()) {
+            commentMutation.mutate({
+              content: newComment,
+              parentId: comment._id,
+            });
+          }
+        }}
+      >
+        <input
+          type="text"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          className="w-full p-2 rounded bg-white/20 text-white placeholder-gray-200"
+          placeholder="Write a reply..."
+        />
+        <div className="mt-1 text-xs">
+          <button type="submit" className="text-green-300 hover:underline">
+            💬 Post Reply
+          </button>
+          <button
+            onClick={() => setReplyTo(null)}
+            type="button"
+            className="ml-2 text-gray-300 hover:underline"
           >
-            <input
-              type="text"
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className="border p-1 rounded w-full mb-1"
-              placeholder="Write a reply..."
-            />
-            <div className="text-sm">
-              <button type="submit" className="text-green-600">
-                Post Reply
-              </button>
-              <button
-                onClick={() => setReplyTo(null)}
-                type="button"
-                className="ml-2 text-gray-600"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        )}
-        {/* Recursive rendering of nested children */}
-        {comment.children &&
-          comment.children.length > 0 &&
-          renderComments(comment.children)}
-      </div>
+            ❌ Cancel
+          </button>
+        </div>
+      </form>
+    )}
+  </div>
+
+  {comment.children?.length > 0 && renderComments(comment.children)}
+</div>
     ));
     
   if (postLoading || commentsLoading) return <p>Loading...</p>;
   if (!post) return <p>Post not found.</p>;
 
-  return (
-    <div className="p-4 max-w-2xl mx-auto bg-white shadow-md rounded">
-      <h2 className="text-xl font-bold">{post.content}</h2>
-      <p>🌍 {post.country}</p>
-      <p>🕒 {new Date(post.createdAt).toLocaleString()}</p>
+return (
+  <div className="min-h-screen px-4 py-8 bg-gradient-to-br from-purple-700 via-indigo-800 to-slate-900 text-white">
+    <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl shadow-2xl p-6 animate-fadeIn">
+      <h2 className="text-2xl font-bold text-indigo-100 mb-1">{post.content}</h2>
+      <p className="text-indigo-300">🌍 {post.country}</p>
+      <p className="text-indigo-400 mb-2">🕒 {new Date(post.createdAt).toLocaleString()}</p>
       <p
-        className="cursor-pointer"
+        className="cursor-pointer text-pink-300 hover:text-pink-400 transition"
         onClick={() => likeMutation.mutate(post._id)}
       >
         ❤️ {post.likes} likes
       </p>
 
-      <hr className="my-4" />
+      <hr className="my-4 border-indigo-300/30" />
 
+      {/* Add Comment */}
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -208,25 +212,46 @@ export default function Eachpost() {
           type="text"
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Add a comment..."
-          className="border p-2 w-full mb-2 rounded"
+          placeholder="💬 Add a comment..."
+          className="w-full rounded-lg border border-indigo-400/30 bg-white/10 text-white placeholder-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
         <button
           type="submit"
-          className="bg-indigo-600 text-white px-4 py-2 rounded"
           disabled={commentMutation.isPending}
+          className="mt-3 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-medium shadow-md transition"
         >
           {commentMutation.isPending ? "Posting..." : "Post Comment"}
         </button>
       </form>
 
-      <h3 className="text-lg font-semibold mt-4">💬 Comments</h3>
+      <h3 className="text-lg font-semibold mt-6 mb-3 text-emerald-300">
+        💬 Comments
+      </h3>
 
-      {comments.length === 0 ? (
-        <p>No comments yet.</p>
-      ) : (
-        renderComments(comments)
-      )}
+      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 space-y-3">
+        {comments.length === 0 ? (
+          <p className="text-gray-300">No comments yet.</p>
+        ) : (
+          renderComments(comments)
+        )}
+      </div>
     </div>
-  );
+
+    <style>{`
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out;
+      }
+    `}</style>
+  </div>
+);
 }
