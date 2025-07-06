@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../features/Auth/authSlice.js';
 import { toast } from 'react-toastify';
-import API from '../api/axios';
+import API from '../api/axios.js';
 
 const Login = () => {
   const navigate = useNavigate();
