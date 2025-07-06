@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import InputField from "../components/InputField";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import API from "../api/axios";
+import API from "../API/axios.js";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
