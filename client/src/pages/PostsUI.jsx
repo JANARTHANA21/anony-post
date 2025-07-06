@@ -13,7 +13,7 @@ const PostsUI = () => {
   ];
 
   const [countryName, setCountryName] = useState('GLOBAL');
-
+  const dummy = 1;
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-slate-900 text-white px-4 py-8">
       <header className="text-center mb-10 animate-fadeIn">
