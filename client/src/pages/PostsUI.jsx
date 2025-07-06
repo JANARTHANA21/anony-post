@@ -18,7 +18,7 @@ const PostsUI = () => {
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-800 to-slate-900 text-white px-4 py-8">
       <header className="text-center mb-10 animate-fadeIn">
         <h1 className="text-4xl font-extrabold tracking-wide text-white drop-shadow-glow mb-4">
-          🌐 Anonymous Posts
+          🌐 EchoHaven - Anonymous Messaging Platform
         </h1>
 
         <div className="flex flex-col items-center gap-3 mb-6">
