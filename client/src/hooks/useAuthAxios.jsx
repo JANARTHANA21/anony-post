@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { setCredentials, logout } from '../features/auth/authSlice';
+import { setCredentials, logout } from '../features/Auth/authSlice.js';
 import axios from 'axios';
 
 export default function useAuthAxios() {

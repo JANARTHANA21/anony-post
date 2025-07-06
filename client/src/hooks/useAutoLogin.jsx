@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { setCredentials, setRefreshingDone } from '../features/auth/authSlice';
+import { setCredentials, setRefreshingDone } from '../features/Auth/authSlice.js';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
