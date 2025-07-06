@@ -4,21 +4,28 @@ import asyncWrapper from "../middlewares/asyncWrapper.js";
 import User from "../models/User.js";
 import CustomError from "../utils/customError.js";
 
-const register= 
-    asyncWrapper(async(req,res)=>{
-        const {username,email,password}=req.body
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-        return next(new CustomError("User already exists", 409)); 
-        }
-        const user=await User.create({username,email,password})
-        if (!user) {
-            return next(new CustomError("User cant create try again later", 409)); 
-        }
-        res.status(201).json({msg:"User registered",user});
-    });
+const register = asyncWrapper(async (req, res, next) => {
+  const { username, email, password } = req.body;
 
-const login =asyncWrapper(async (req,res)=>{
+  const existingUsername = await User.findOne({ username });
+  if (existingUsername) {
+    return next(new CustomError("Username already taken", 409));
+  }
+
+  const existingEmail = await User.findOne({ email });
+  if (existingEmail) {
+    return next(new CustomError("Email already registered", 409));
+  }
+
+  const user = await User.create({ username, email, password });
+  if (!user) {
+    return next(new CustomError("User can't be created. Try again later.", 500));
+  }
+
+  res.status(201).json({ msg: "User registered", user });
+});
+
+const login =asyncWrapper(async (req,res,next)=>{
     const {email,password}=req.body
     const user=await User.findOne({email}).select('+password');
     if (!user) return next(new CustomError("user not found", 404)); 
