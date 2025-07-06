@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputField from '../components/InputField';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { setCredentials } from '../features/auth/authSlice.js';
+import { setCredentials } from '../features/Auth/authSlice.js';
 import { toast } from 'react-toastify';
 import API from '../api/axios';
 
