@@ -15,3 +15,9 @@ Features:
                 
 Technologies Used:
                 React, Vite, Tailwind CSS, Redux Toolkit, React Router, React Query, Express.js, Node.js, MongoDB, Mongoose, JWT, Axios, Toastify, Dotenv, Custom Error Handling
+
+
+
+
+live demo:
+      https://echohaven-janarthana-s-projects.vercel.app
