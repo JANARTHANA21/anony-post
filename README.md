@@ -20,4 +20,8 @@ Technologies Used:
 
 
 live demo:
+
+  Frontend:
       https://echohaven-janarthana-s-projects.vercel.app
+  Backend:
+      https://echohaven-dv1f.onrender.com
