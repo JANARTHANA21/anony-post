@@ -1,8 +1,8 @@
 export default class customError extends Error{
-    constructor(message,statuscode=500){
+    constructor(message,statusCode=500){
         super(message)
         this.name=this.constructor.name
-        this.statuscode=statuscode
+        this.statuscode=statusCode
         Error.captureStackTrace(this,this.constructor)
     }
 }
