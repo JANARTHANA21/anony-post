@@ -2,7 +2,9 @@ import cors from "cors";
 const allowedOrigins = [
   "http://localhost:5173",
   "http://127.0.0.1:5173",
-  "https://echohaven-git-main-janarthana-s-projects.vercel.app"
+  "echohaven.vercel.app",
+"echohaven-git-main-janarthana-s-projects.vercel.app",
+"echohaven-foo5ri5r7-janarthana-s-projects.vercel.app"
 ];
 
 export default function CORS() {
