@@ -22,7 +22,7 @@ Technologies Used:
 live demo:
 
   Frontend:
-      https://echohaven.vercel.app
+      https://echohaven.vercel.app           (deployed on vercel)
 
   Backend:
-      https://echohaven-dv1f.onrender.com
+      https://echohaven-dv1f.onrender.com    (deployed on render)
